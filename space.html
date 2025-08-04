@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cielo Estrellado con Mensajes e Imágenes</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+      perspective: 800px;
+      font-family: "Lucida Console", Courier, monospace;
+    }
+
+    .estrella {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0;
+      animation: parpadeo 2s infinite;
+    }
+
+    @keyframes parpadeo {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    .mensaje {
+      position: absolute;
+      color: #dda0dd;
+      font-weight: bold;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateZ(-1000px) scale(0.2);
+      animation: aparecer 6s ease-out forwards;
+      pointer-events: none;
+      text-shadow: 0 0 4px #dda0dd;
+    }
+
+    .mensaje img {
+      border-radius: 50%;
+      width: 100px;
+      height: auto;
+      display: block;
+    }
+
+    @keyframes aparecer {
+      0% {
+        opacity: 0;
+        transform: translateZ(-1000px) scale(0.2);
+      }
+      50% {
+        opacity: 1;
+        transform: translateZ(0px) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateZ(300px) scale(1.5);
+      }
+    }
+
+    @keyframes aparecerImagen {
+      0% {
+        opacity: 0;
+        transform: translateZ(-1000px) scale(0.2);
+      }
+      50% {
+        opacity: 1;
+        transform: translateZ(0px) scale(1.5);
+      }
+      100% {
+        opacity: 0;
+        transform: translateZ(300px) scale(4);
+      }
+    }
+  </style>
+</head>
+<body>
+    <!-- <div>
+        <img src="https://drive.google.com/thumbnail?id=1er9YIOEwIG1mfTLUKLzQWluNAjyfc-li" alt="" style="width: 200px;height: 300px;">
+    </div> -->
+  <script>
+    // Estrellas
+    const cantidadEstrellas = 200;
+    for (let i = 0; i < cantidadEstrellas; i++) {
+      const estrella = document.createElement('div');
+      estrella.classList.add('estrella');
+      estrella.style.left = `${Math.random() * window.innerWidth}px`;
+      estrella.style.top = `${Math.random() * window.innerHeight}px`;
+      const tamaño = Math.random() * 2 + 1;
+      estrella.style.width = `${tamaño}px`;
+      estrella.style.height = `${tamaño}px`;
+      estrella.style.animationDuration = `${2 + Math.random() * 3}s`;
+      estrella.style.animationDelay = `${Math.random() * 5}s`;
+      document.body.appendChild(estrella);
+    }
+
+    // Frases
+    const messages = [
+            "Eres mi princesa",
+            "Siempre tú y yo",
+            "Amor para siempre",
+            "Mi corazón",
+            "Contigo hasta siempre",
+            "Tú y solo tú",
+            "Mis ojitos bellos",
+            "Me encantas mucho",
+            "Para ti, amor",
+            "Mi dulce amor",
+            "Eres mi luz",
+            "Sueño contigo siempre",
+            "Eres mi paz",
+            "Mi amor eterno",
+            "Solo pienso en ti",
+            "Amarte es vida",
+            "Eres mi alegría",
+            "Quiero estar contigo",
+            "Por siempre juntos",
+            "Tú me completas",
+            "Eres mi cielo",
+            "Mi amor fiel",
+            "Tu sonrisa encanta",
+            "Eres mi niña preciosa",
+            "Juntos hasta el fin",
+            "Mi alma gemela",
+            "Eres mi inspiración",
+            "Contigo todo es posible",
+            "Amor de mi vida",
+            "Solo tú importas"
+            ];
+
+    function lanzarMensaje() {
+      const mensaje = document.createElement('div');
+      mensaje.classList.add('mensaje');
+      mensaje.textContent = messages[Math.floor(Math.random() * messages.length)];
+      mensaje.style.left = `${Math.random() * (window.innerWidth - 100)}px`;
+      mensaje.style.top = `${Math.random() * (window.innerHeight - 100)}px`;
+      mensaje.style.fontSize = `${16 + Math.random() * 24}px`;
+      document.body.appendChild(mensaje);
+      setTimeout(() => mensaje.remove(), 6000);
+    }
+
+    // Imágenes
+    const imageUrls = [
+      "https://drive.google.com/thumbnail?id=1eoaY6qRbXAmK2Dq9IAk05Xxt-HyclOGw",
+      "https://drive.google.com/thumbnail?id=1er9YIOEwIG1mfTLUKLzQWluNAjyfc-li",
+      "https://drive.google.com/thumbnail?id=1erIIkw8mwJ9bGbTJxrvDFDGQP3t2lH-i",
+      "https://drive.google.com/thumbnail?id=1esUgsJPw8tdY-nzTWML1KIv1VpqvlfVO",
+      "https://drive.google.com/thumbnail?id=1emGtKcr2WdMELUILPeYzRzGQWp7Yeity"
+    //   "https://drive.google.com/thumbnail?id="
+    //   "https://drive.google.com/thumbnail?id=",
+    ];
+    function lanzarImagen() {
+      const contenedor = document.createElement('div');
+      contenedor.classList.add('mensaje');
+      contenedor.style.animation = "aparecerImagen 6s ease-out forwards";
+      contenedor.style.left = `${Math.random() * (window.innerWidth - 100)}px`;
+      contenedor.style.top = `${Math.random() * (window.innerHeight - 100)}px`;
+      
+      const img = document.createElement('img');
+      img.src = imageUrls[Math.floor(Math.random() * imageUrls.length)];
+    //   img.alt = "Imagen animada";
+
+      contenedor.appendChild(img);
+      document.body.appendChild(contenedor);
+
+      setTimeout(() => contenedor.remove(), 6000);
+    }
+
+    // Intervalo de aparición constante
+    setInterval(() => {
+      lanzarMensaje();
+      lanzarMensaje();
+      lanzarImagen();
+    }, 1000);
+  </script>
+</body>
+</html>
