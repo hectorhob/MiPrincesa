@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensaje Especial Para Ti</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #f3e5f5 100%);
+            color: #283593;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Corazones animados en el fondo */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .heart {
+            position: absolute;
+            color: #ff5252;
+            opacity: 0.7;
+            font-size: 20px;
+            animation: fall 8s linear infinite;
+            top: -50px;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(90deg);
+            }
+        }
+        
+        /* Contenedor principal */
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            z-index: 2;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            z-index: -1;
+            background: linear-gradient(135deg, #5c6bc0 0%, #8e24aa 100%);
+            border-radius: 30px;
+            opacity: 0.1;
+        }
+        
+        h1 {
+            color: #3949ab;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            color: #5c6bc0;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        /* Campos de entrada */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #5c6bc0;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #d1c4e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: #f5f5f5;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #7986cb;
+            box-shadow: 0 0 0 3px rgba(121, 134, 203, 0.2);
+        }
+        
+        /* Botones */
+        .btn {
+            background: linear-gradient(to right, #3949ab, #8e24aa);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(57, 73, 171, 0.3);
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(57, 73, 171, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Área de carga */
+        .loading-container {
+            display: none;
+            margin: 30px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #3949ab, #8e24aa);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .loading-text {
+            font-size: 18px;
+            color: #5c6bc0;
+            margin-bottom: 10px;
+            min-height: 27px;
+        }
+        
+        /* Resultado */
+        .result-container {
+            display: none;
+            margin: 30px 0;
+        }
+        
+        .message {
+            font-size: 22px;
+            color: #3949ab;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+        
+        /* Opciones SI/NO */
+        .options {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            position: relative;
+            min-height: 50px;
+        }
+        
+        #btnNo {
+            position: absolute;
+        }
+        
+        /* Pantalla final */
+        .fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            display: none;
+        }
+        
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #ff0000;
+            opacity: 0;
+        }
+        
+        .final-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 4;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+        }
+        
+        .final-message {
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                width: 95%;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .message {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Corazones en el fondo -->
+    <div class="hearts-container" id="hearts"></div>
+    
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Pantalla de bienvenida -->
+        <div id="welcome-screen">
+            <h1><i class="fas fa-lock"></i> Mensaje Secreto</h1>
+            <p>He recibido un mensaje encriptado especial. Necesito tu ayuda para descifrarlo. Por favor, ingresa los códigos necesarios.</p>
+            
+            <div class="input-group">
+                <label for="code-input"><i class="fas fa-key"></i> Ingresa los códigos (separados por comas):</label>
+                <input type="text" id="code-input" placeholder="168-081-085, 073-069-082, ...">
+            </div>
+            
+            <button class="btn" id="decrypt-btn"><i class="fas fa-play"></i> Desencriptar Mensaje</button>
+        </div>
+        
+        <!-- Pantalla de carga -->
+        <div class="loading-container" id="loading-screen">
+            <h2><i class="fas fa-cog fa-spin"></i> Desencriptando</h2>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="loading-text" id="loading-text">Iniciando desencriptación...</div>
+        </div>
+        
+        <!-- Pantalla de resultado -->
+        <div class="result-container" id="result-screen">
+            <div class="message">
+                "Lo que siento por ti es más que especial."
+            </div>
+            
+            <p>¿Te gustaría que diéramos un paso más y seamos novios oficialmente?</p>
+            
+            <div class="options">
+                <button class="btn" id="btnYes">¡Sí!</button>
+                <button class="btn" id="btnNo">No</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Fuegos artificiales -->
+    <div class="fireworks-container" id="fireworks"></div>
+    
+    <!-- Pantalla final -->
+    <div class="final-screen" id="final-screen">
+        <h2 class="final-message">¡Eres la mejor decisión de mi vida!<br>Te amo <i class="fas fa-heart"></i></h2>
+        <button class="btn" id="restart-btn">Volver a comenzar</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos del DOM
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const loadingScreen = document.getElementById('loading-screen');
+            const resultScreen = document.getElementById('result-screen');
+            const finalScreen = document.getElementById('final-screen');
+            const progressBar = document.getElementById('progress');
+            const loadingText = document.getElementById('loading-text');
+            const decryptBtn = document.getElementById('decrypt-btn');
+            const btnYes = document.getElementById('btnYes');
+            const btnNo = document.getElementById('btnNo');
+            const restartBtn = document.getElementById('restart-btn');
+            const heartsContainer = document.getElementById('hearts');
+            const fireworksContainer = document.getElementById('fireworks');
+            
+            // Códigos correctos (sin importar el orden)
+            const correctCodes = [
+                "168-081-085", "073-069-082", "083-032-083", 
+                "069-082-032", "077-073-032", "078-079-086", 
+                "073-065-063"
+            ];
+            
+            // Generar corazones en el fondo
+            function createHearts() {
+                for (let i = 0; i < 25; i++) {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '<i class="fas fa-heart"></i>';
+                    heart.classList.add('heart');
+                    
+                    // Posición y tamaño aleatorios
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
+                    heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                    heart.style.animationDelay = Math.random() * 5 + 's';
+                    
+                    heartsContainer.appendChild(heart);
+                }
+            }
+            
+            // Función para validar los códigos
+            function validateCodes(inputCodes) {
+                const inputArray = inputCodes.split(',').map(code => code.trim());
+                
+                // Verificar que se hayan ingresado todos los códigos
+                if (inputArray.length !== correctCodes.length) {
+                    return false;
+                }
+                
+                // Verificar que todos los códigos ingresados estén en la lista correcta
+                for (const code of inputArray) {
+                    if (!correctCodes.includes(code)) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            }
+            
+            // Función para simular la desencriptación
+            function simulateDecryption() {
+                welcomeScreen.style.display = 'none';
+                loadingScreen.style.display = 'block';
+                
+                const messages = [
+                    "Analizando códigos...",
+                    "Verificando secuencias...",
+                    "Desencriptando mensaje...",
+                    "Interpretando significado...",
+                    "Preparando resultado..."
+                ];
+                
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 2;
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress % 20 === 0) {
+                        loadingText.textContent = messages[progress / 20 - 1];
+                    }
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        loadingScreen.style.display = 'none';
+                        resultScreen.style.display = 'block';
+                    }
+                }, 100);
+            }
+            
+            // Función para mover el botón "No"
+            function moveNoButton() {
+                const x = Math.random() * (window.innerWidth - 100);
+                const y = Math.random() * (window.innerHeight - 50);
+                
+                btnNo.style.position = 'fixed';
+                btnNo.style.left = x + 'px';
+                btnNo.style.top = y + 'px';
+            }
+            
+            // Función para crear fuegos artificiales
+            function createFireworks() {
+                resultScreen.style.display = 'none';
+                finalScreen.style.display = 'flex';
+                
+                for (let i = 0; i < 50; i++) {
+                    setTimeout(() => {
+                        const firework = document.createElement('div');
+                        firework.classList.add('firework');
+                        
+                        const colors = ['#ff5252', '#ff4081', '#e040fb', '#7c4dff', '#536dfe', '#448aff'];
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        
+                        firework.style.backgroundColor = color;
+                        firework.style.left = Math.random() * 100 + 'vw';
+                        firework.style.top = Math.random() * 100 + 'vh';
+                        
+                        fireworksContainer.appendChild(firework);
+                        
+                        // Animación
+                        setTimeout(() => {
+                            firework.style.opacity = '1';
+                            firework.style.transform = 'scale(1)';
+                            firework.style.transition = 'all 0.5s ease-out';
+                            
+                            setTimeout(() => {
+                                firework.style.opacity = '0';
+                                firework.style.transform = 'scale(3)';
+                                
+                                setTimeout(() => {
+                                    fireworksContainer.removeChild(firework);
+                                }, 500);
+                            }, 800);
+                        }, 10);
+                    }, i * 200);
+                }
+            }
+            
+            // Event Listeners
+            decryptBtn.addEventListener('click', function() {
+                const inputCodes = document.getElementById('code-input').value;
+                
+                if (validateCodes(inputCodes)) {
+                    simulateDecryption();
+                } else {
+                    alert('Los códigos ingresados no son correctos. Por favor, verifica que hayas ingresado todos los códigos en el formato correcto.');
+                }
+            });
+            
+            btnNo.addEventListener('mouseover', moveNoButton);
+            btnNo.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                moveNoButton();
+            });
+            
+            btnYes.addEventListener('click', createFireworks);
+            
+            restartBtn.addEventListener('click', function() {
+                finalScreen.style.display = 'none';
+                welcomeScreen.style.display = 'block';
+                document.getElementById('code-input').value = '';
+            });
+            
+            // Inicializar
+            createHearts();
+        });
+    </script>
+</body>
+</html>
